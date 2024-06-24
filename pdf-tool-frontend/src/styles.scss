@@ -1,0 +1,24 @@
+@import "./app/shared/styles/partials";
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-size: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: #007bff transparent;
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #007bff;
+        border-radius: 2px;
+    }
+}
+body{
+    background-color: var(--background-white);
+}

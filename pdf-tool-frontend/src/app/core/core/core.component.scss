@@ -1,0 +1,13 @@
+.page{
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+}
+.component-loader{
+    height: 100%;
+    // padding:20px 10px;
+}
+nav{
+    height: 3rem;
+    width: 100%;
+}

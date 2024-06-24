@@ -1,0 +1,31 @@
+<form [formGroup]="form">
+    <div class="row">
+        <div class="row_element">
+            <text-input [label]="'Name'" controlName="name" [parentForm]="form" />
+        </div>
+    </div>
+    <div class="row">
+      <div class="row_element">
+        <email-input [label]="'Email'" controlName="email" [parentForm]="form" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="row_element">
+        <password-input
+          [label]="'Password'"
+          controlName="password"
+          [parentForm]="form"
+        />
+      </div>
+    </div>
+  </form>
+  <div class="button_group">
+    <button
+      [disabled]="form.status == 'INVALID'"
+      [className]="form.status == 'VALID' && 'button_active'"
+      (click)="form.status == 'VALID' && join()"
+      #loginButton
+    >
+      Join
+    </button>
+  </div>

@@ -1,0 +1,8 @@
+<div class="page">
+    @if(navService.getNavigationState()()){
+        <nav nav-bar ></nav>
+    }
+    <div class="component-loader">
+    <router-outlet />
+    </div>
+</div>

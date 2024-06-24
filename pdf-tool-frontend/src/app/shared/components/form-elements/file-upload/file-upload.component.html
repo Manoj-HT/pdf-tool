@@ -1,0 +1,15 @@
+<div class="form-element_container">
+  <input
+    type="text"
+    [name]="controlName()"
+    [id]="controlName()"
+    [formControl]="control"
+  />
+  <label [for]="label()">
+    <div>
+      <p>Upload</p>
+      <p class="link" >accepted type {{ displayText }}</p>
+    </div>
+  </label>
+  <input type="file" [name]="label()" [accept]="acceptTypeText()" [id]="label()" (input)="getFile($event)" />
+</div>

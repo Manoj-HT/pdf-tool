@@ -1,0 +1,68 @@
+<div class="component_container">
+  <div class="card">
+    <div class="table_wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Uploaded date</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(pdf of pdfList; track pdf){
+            <tr>
+              <td>{{ pdf.name }}</td>
+              <td>{{ pdf.description }}</td>
+              <td>{{ pdf.createdDate | date }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <p class="heading">Upload New PDF</p>
+    <form action="">
+      <div class="row">
+        <div class="row_element">
+          <text-input
+            [label]="'Name'"
+            [controlName]="'name'"
+            [parentForm]="form"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="row_element">
+          <text-area
+            [label]="'Description'"
+            [controlName]="'description'"
+            [parentForm]="form"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="row_element">
+          <file-upload
+            [acceptTypeText]="'.pdf, .docx, .doc'"
+            [controlName]="'fileId'"
+            [label]="'pdfUpload'"
+            [parentForm]="form"
+            [executeFnForValueSet]="true"
+            [fnForValueSet]="uploadFile"
+          />
+        </div>
+      </div>
+    </form>
+    <div class="button_group">
+      <button
+      [disabled]="form.status == 'INVALID'"
+      [className]="form.status == 'VALID' && 'button_active'"
+      (click)="form.status == 'VALID' && upload()"
+    >
+      Upload
+    </button>
+    </div>
+  </div>
+</div>

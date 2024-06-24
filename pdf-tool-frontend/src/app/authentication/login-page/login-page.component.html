@@ -1,0 +1,30 @@
+<div class="login_page">
+  <div class="img_container">
+    <!-- <login-background /> -->
+  </div>
+  <div class="login_form">
+    <div class="welcome_container">
+      <h1>Welcome</h1>
+      <p>GM PDF Viewer</p>
+    </div>
+    <div class="password_component-container">
+      @switch (case) { @case ("login") {
+      <p>Sign in to continue</p>
+      <password-login (loggedIn)="loggedIn($event)" />
+      <p (click)="case = 'create'" class="link">Not a user? Join Now</p>
+      } @case("create") {
+      <p>Enter details to join</p>
+      <create-user (joined)="joined($event)" />
+      <p (click)="case = 'login'" class="link">
+        Already have an account ? Login
+      </p>
+      } }
+    </div>
+  </div>
+</div>
+@if(dialog()){
+<div class="alert card">
+  <p>{{ text }}</p>
+  <button (click)="dialog.set(false)">OK</button>
+</div>
+}

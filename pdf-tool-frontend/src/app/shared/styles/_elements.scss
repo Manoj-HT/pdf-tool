@@ -1,0 +1,57 @@
+.component_container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 20px;
+}
+
+.component_container-padding{
+    padding: 10px;
+    margin-left: 10px;
+    @media screen and (max-width: 425px) {
+      margin-left: 5px;
+    }
+}
+
+.card {
+  box-shadow: 0 0 20px rgba($color: #934a01, $alpha: 0.2);
+  border-radius: 1rem;
+  padding: 10px;
+  width: max-content;
+  height: max-content;
+  background-color: var(--theme);
+}
+
+.heading{
+  color: var(--theme_color-bold);
+  font-size: 2rem;
+  @media screen and (max-width: 768px) {
+    margin: 5px 0;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}
+
+.row{
+  display: flex;
+  .row_element{
+    width: 100%;
+  }
+}
+
+input[type='checkbox']{
+  accent-color: var(--theme_color-bold);
+}
+
+.no-mobile-view{
+  @media screen and (max-width: 426px){
+    display: none !important;
+  }
+}
+
+.link{
+  margin: 10px 0;
+  font-size: small;
+  font-style: italic;
+  cursor: pointer;
+}
