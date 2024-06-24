@@ -27,6 +27,11 @@ export class ApiService {
     return this.http.post<ApiResponse>(url, formData)
   }
 
+  bookById(id : string){
+    let url = ''
+    return this.http.get(url)
+  }
+
   createPdfEntry(pdf : PDF){
     let url = ''
     return this.http.post<ApiResponse>(url, pdf)

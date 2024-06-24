@@ -1,3 +1,7 @@
+# 0.0.2
+
+1. pdf viewer component added
+
 # 0.0.1
 
 1. added backend with basic crud.
