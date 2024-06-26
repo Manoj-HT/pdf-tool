@@ -1,3 +1,7 @@
+# 0.0.5
+
+1. added login background
+
 # 0.0.4
 
 1. added pdf functionality for saving annotations
