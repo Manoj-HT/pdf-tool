@@ -76,7 +76,7 @@ var apis = {
     updatePdf: "/update-pdf",
     pdfListByUserId: "/pdf-list-by-userId",
     uploadPdf: "/upload-pdf",
-    downloadPdf: "/download-pdf"
+    downloadPdf: "/download-pdf",
 };
 // apis
 app.get(apis.default, function (req, res) {
@@ -190,6 +190,7 @@ app.put(apis.updatePdf, authMiddleware, function (req, res) {
     originalValue = __assign(__assign({}, originalValue), updateValue);
     pdfs.update(originalValue.id, originalValue);
     pdfs.save();
+    res.send({ message: "updated succesfully" });
 });
 app.delete(apis.pdf, authMiddleware, function (req, res) {
     var id = req.query.id;

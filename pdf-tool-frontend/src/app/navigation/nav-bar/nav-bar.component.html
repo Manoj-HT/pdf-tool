@@ -1,5 +1,26 @@
 <div class="nav-container">
-    <div class="img-container">
-        <img src="assets/other.svg" alt="">
+  <div class="left_container">
+    @if(tools().backButton){
+    <span class="material-symbols-outlined" (click)="gotoHome()">
+      arrow_back
+    </span>
+    }
+  </div>
+  <div class="right_container">
+    @if(tools().saveButton){
+    <button class="button_active" (click)="save()">{{ saveState() }}</button>
+    }
+    <div class="profile_wrapper">
+      <div class="img-container" (click)="setProfileOptions()">
+        <img src="assets/other.svg" alt="" />
+      </div>
+      @if(isProfileOptions()){
+      <div class="card options">
+        <ul>
+          <li (click)="logout()">Logout</li>
+        </ul>
+      </div>
+      }
     </div>
+  </div>
 </div>

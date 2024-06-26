@@ -74,7 +74,7 @@ const apis = {
   updatePdf: "/update-pdf",
   pdfListByUserId: "/pdf-list-by-userId",
   uploadPdf: "/upload-pdf",
-  downloadPdf : "/download-pdf"
+  downloadPdf: "/download-pdf",
 };
 
 // apis
@@ -209,6 +209,7 @@ app.put(apis.updatePdf, authMiddleware, (req, res) => {
   };
   pdfs.update(originalValue.id, originalValue);
   pdfs.save();
+  res.send({ message: "updated succesfully" } as ApiResponse);
 });
 
 app.delete(apis.pdf, authMiddleware, (req, res) => {
@@ -219,8 +220,8 @@ app.delete(apis.pdf, authMiddleware, (req, res) => {
 });
 
 app.post(apis.uploadPdf, upload.single("file"), authMiddleware, (req, res) => {
-  const file = req.file
-  const fileName = file?.filename
+  const file = req.file;
+  const fileName = file?.filename;
   res.send({
     message: `file uploaded at location ${fileName}`,
     fileName,
@@ -228,10 +229,10 @@ app.post(apis.uploadPdf, upload.single("file"), authMiddleware, (req, res) => {
 });
 
 app.get(apis.downloadPdf, (req, res) => {
-  const fileName = req.query.fileName as string
-  const filePath = path.join(__dirname, "..", "uploads", "documents", fileName)
-  res.download(filePath,fileName)
-})
+  const fileName = req.query.fileName as string;
+  const filePath = path.join(__dirname, "..", "uploads", "documents", fileName);
+  res.download(filePath, fileName);
+});
 
 // server
 app.listen(port, () => {

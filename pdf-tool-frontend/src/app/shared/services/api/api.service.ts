@@ -27,7 +27,6 @@ export class ApiService {
     return this.http.post<ApiResponse>(url, formData);
   }
 
-
   createPdfEntry(pdf: PDF) {
     let url = `${this.config.prefix}${this.config.apis.createPdf}`;
     return this.http.post<ApiResponse>(url, pdf);
@@ -45,5 +44,10 @@ export class ApiService {
 
   getPdfUrl(fileName : string){
     return `${this.config.prefix}${this.config.apis.downloadPdf}?fileName=${fileName}`
+  }
+
+  updatePdf(pdf : PDF){
+    let url = `${this.config.prefix}${this.config.apis.updatePdf}`
+    return this.http.put(url, pdf)
   }
 }

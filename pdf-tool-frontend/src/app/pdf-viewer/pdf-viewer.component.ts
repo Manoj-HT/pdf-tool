@@ -2,6 +2,8 @@ import {
   Component,
   Input,
   Signal,
+  ViewChild,
+  ViewEncapsulation,
   WritableSignal,
   inject,
   signal,
@@ -9,12 +11,16 @@ import {
 import { Router } from '@angular/router';
 import { ApiService } from '../shared/services/api/api.service';
 import {
-  AnnotationEditorLayerRenderedEvent,
+  EditorAnnotation,
+  InkEditorAnnotation,
   NgxExtendedPdfViewerComponent,
   NgxExtendedPdfViewerModule,
   NgxExtendedPdfViewerService,
   PdfSidebarView,
 } from 'ngx-extended-pdf-viewer';
+import { AnnotationEditorEvent } from 'ngx-extended-pdf-viewer/lib/events/annotation-editor-layer-event';
+import { PDF } from '../shared/models/pdf';
+import { NavService } from '../navigation/nav-service/nav-service.service';
 const PdfViewerImports = [NgxExtendedPdfViewerModule];
 @Component({
   selector: 'pdf-viewer',
@@ -27,28 +33,72 @@ export class PdfViewerComponent {
   private router = inject(Router);
   private apiService = inject(ApiService);
   id = this.router.url.split('/')[2];
-  pdfService = inject(NgxExtendedPdfViewerService);
+  private pdfService = inject(NgxExtendedPdfViewerService);
+  private navService = inject(NavService);
   ngOnInit(): void {
+    let toolsNeeded = {
+      ...this.navService.tools,
+      saveButton: true,
+      backButton: true,
+    };
+    this.navService.setNavBarTools(toolsNeeded);
     this.getBookById();
-  }
-
-  src = signal<string>('') as WritableSignal<string>;
-  isSrcPresent = signal(false);
-  getBookById() {
-    this.apiService.pdfById(this.id).subscribe({
+    this.navService.savePdfAnnotations.subscribe({
       next: (res) => {
-        let fileName = res.fileName;
-        this.src.update(() => this.apiService.getPdfUrl(fileName));
-        this.isSrcPresent.update((p) => !p);
+        if (res) {
+          this.save();
+        }
       },
     });
   }
 
-  activeSidebarViewChange(e: PdfSidebarView) {
-    console.log(e);
+  src = signal<string>('') as WritableSignal<string>;
+  isSrcPresent = signal(false);
+  pdf!: PDF;
+  getBookById() {
+    this.apiService.pdfById(this.id).subscribe({
+      next: (res) => {
+        let fileName = res.fileName;
+        this.pdf = res;
+        this.src.update(() => this.apiService.getPdfUrl(fileName));
+        this.isSrcPresent.update((p) => !p);
+        setTimeout(() => {
+          if(res.data){
+            if(res.data.length != 0){
+              this.addAnnotations(res.data);
+            }
+          }
+        }, 1000);
+      },
+    });
   }
 
-  onAnnotationLayerRendered(e: AnnotationEditorLayerRenderedEvent) {
-    console.log(e);
+  save() {
+    this.pdf = {
+      ...this.pdf,
+      data: this.pdfService.getSerializedAnnotations(),
+    };
+    this.apiService.updatePdf(this.pdf).subscribe({
+      next: (res) => {
+        this.navService.setSaveState('Saved');
+      },
+      error: (err) => {
+        this.navService.setSaveState('Error');
+      },
+      complete: () => {
+        this.navService.savePdfAnnotations.next(false);
+      },
+    });
+  }
+
+  addAnnotations(serialAnnotations: EditorAnnotation[]) {
+    console.log(serialAnnotations);
+    for (let ann of serialAnnotations) {
+      this.pdfService.addEditorAnnotation(ann);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.navService.setNavBarTools(this.navService.tools);
   }
 }

@@ -14,12 +14,20 @@ export class LocalStorageService {
     localStorage.setItem('token', btoa(token))
   }
 
+  removeToken(){
+    localStorage.removeItem('token')
+  }
+
   setUserId(id : string){
     localStorage.setItem('userId', id)
   }
   
   getUserId(){
     return localStorage.getItem('userId') as string
+  }
+
+  removeId(){
+    localStorage.removeItem('userId')
   }
 
 }

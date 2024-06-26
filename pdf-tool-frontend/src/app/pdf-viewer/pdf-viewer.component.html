@@ -1,3 +1,10 @@
 @if(isSrcPresent()){
-<ngx-extended-pdf-viewer [src]="src()"></ngx-extended-pdf-viewer>
+<ngx-extended-pdf-viewer
+  [src]="src()"
+  [backgroundColor]="'var(--background-white)'"
+  [filenameForDownload]="'Downloaded from GM PDF Viewer'"
+  [textLayer]="true"
+  [showHighlightEditor]="false"
+  [showPrintButton]="false"
+></ngx-extended-pdf-viewer>
 }

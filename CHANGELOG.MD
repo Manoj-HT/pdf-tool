@@ -1,3 +1,9 @@
+# 0.0.4
+
+1. added pdf functionality for saving annotations
+2. added logout feature
+3. added conditional buttons on nav
+
 # 0.0.3
 
 1. added verbose error messages in backend data store

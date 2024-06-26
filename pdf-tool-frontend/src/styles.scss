@@ -1,24 +1,29 @@
 @import "./app/shared/styles/partials";
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
-    font-optical-sizing: auto;
-    font-size: 16px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--theme_color-bold) transparent;
-    &::-webkit-scrollbar {
-        width: 4px;
-    }
-    &::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background-color: var(--theme_color-bold);
-        border-radius: 2px;
-    }
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-size: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--theme_color-bold) transparent;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--theme_color-bold);
+    border-radius: 2px;
+  }
 }
-body{
-    background-color: var(--background-white);
+body {
+  background-color: var(--background-white);
+  height: 100vh;
+}
+.material-symbols-outlined{
+    color : var(--theme_color-bold)
 }
