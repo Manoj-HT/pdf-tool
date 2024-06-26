@@ -7,6 +7,9 @@ import { DataStore } from "./dataStore.js";
 import { User } from "./models/user.js";
 import { ApiResponse } from "./models/apiResponse.js";
 import { PDF } from "./models/pdf.js";
+import path, { dirname } from "path";
+import multer from "multer";
+import { fileURLToPath } from "url";
 
 // environment configs
 dotenv.config();
@@ -14,11 +17,22 @@ dotenv.config();
 // database
 const pdfs = new DataStore("database/pdfs.json");
 const users = new DataStore("database/users.json");
+const storage = multer.diskStorage({
+  destination: "uploads/documents/",
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, uniqueSuffix + ext);
+  },
+});
 
-// global declarations
+// global declarations and middleware
 const jwtSecretKey = process.env.JWT_SECRET_KEY as jwt.Secret;
 const app = express();
 const port = process.env.PORT;
+const upload = multer({ storage: storage });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authorizationHeader = req.headers.authorization;
   if (!authorizationHeader) {
@@ -45,6 +59,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.static(path.join(__dirname, "..", "uploads", "documents")));
 
 // api endpoints
 const apis = {
@@ -58,6 +73,8 @@ const apis = {
   createPdf: "/create-pdf",
   updatePdf: "/update-pdf",
   pdfListByUserId: "/pdf-list-by-userId",
+  uploadPdf: "/upload-pdf",
+  downloadPdf : "/download-pdf"
 };
 
 // apis
@@ -144,24 +161,36 @@ app.delete(apis.user, authMiddleware, (req, res) => {
 app.get(apis.pdfListByUserId, authMiddleware, (req, res) => {
   let userId = req.query.id as string;
   let user = users.getById(userId) as User;
-  let pdfList
-  try{
-    pdfList = pdfs.getByIdList(...user.pdfList)
-  }catch (err){
+  let pdfList: PDF[] = [];
+  try {
+    pdfList = pdfs.getByIdList(...user.pdfList) as PDF[];
+  } catch (err) {
     console.log(err);
-    pdfList = []
-  }
-  finally{
-    res.send(pdfList)
+  } finally {
+    if (pdfList?.length != 0) {
+      for (let pdf of pdfList) {
+        delete pdf.data;
+      }
+    }
+    res.send(pdfList);
   }
 });
 
 app.post(apis.createPdf, authMiddleware, (req, res) => {
   let pdf = req.body as PDF;
   let createdDate = new Date();
-  let id = btoa(pdf.name) + btoa(String(createdDate));
-  pdf = { ...pdf, id, createdDate };
+  let id = btoa(pdf.name) + btoa(createdDate.toDateString());
+  pdf = { ...pdf, id, createdDate, data: {} };
   pdfs.create(pdf.id, pdf);
+  let user = users.getById(pdf.userId) as User;
+  let pdfList = user.pdfList;
+  pdfList.push(id);
+  user = {
+    ...user,
+    pdfList,
+  };
+  pdfs.save();
+  users.save();
   res.send({ message: "created succesfully", pdf } as ApiResponse);
 });
 
@@ -188,6 +217,21 @@ app.delete(apis.pdf, authMiddleware, (req, res) => {
   res.send({ message: "Deleted" } as ApiResponse);
   pdfs.save();
 });
+
+app.post(apis.uploadPdf, upload.single("file"), authMiddleware, (req, res) => {
+  const file = req.file
+  const fileName = file?.filename
+  res.send({
+    message: `file uploaded at location ${fileName}`,
+    fileName,
+  } as ApiResponse);
+});
+
+app.get(apis.downloadPdf, (req, res) => {
+  const fileName = req.query.fileName as string
+  const filePath = path.join(__dirname, "..", "uploads", "documents", fileName)
+  res.download(filePath,fileName)
+})
 
 // server
 app.listen(port, () => {

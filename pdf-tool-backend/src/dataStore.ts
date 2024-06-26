@@ -21,7 +21,7 @@ export class DataStore {
 
   create(key: string, value: any){
     if(this.map.has(key)){
-        throw new Error("DataStore : key exists");
+        throw new Error(`DataStore : From ${this.filePath} key exists`);
     }
     this.map.set(key, value),
     this.array.push(value)
@@ -41,7 +41,7 @@ export class DataStore {
 
   getById(key : string) {
     if (!this.map.has(key)) {
-      throw new Error("DataStore : Item doesn't exist");
+      throw new Error(`DataStore : From ${this.filePath} item doesn't exists`);
     }
     return this.map.get(key);
   }
@@ -57,7 +57,7 @@ export class DataStore {
 
   update(key: string, value : any) {
     if (!this.map.has(key)) {
-      throw new Error("DataStore : Item doesn't exist");
+      throw new Error(`DataStore : From ${this.filePath} item doesn't exists`);
     }
     this.map.set(key, value);
     let index = this.array.findIndex((item) => item.id === key);
@@ -66,7 +66,7 @@ export class DataStore {
 
   delete(key : string) {
     if (!this.map.has(key)) {
-      throw new Error("DataStore : Item doesn't exist");
+      throw new Error(`DataStore : From ${this.filePath} item doesn't exists`);
     }
     this.map.delete(key);
     let index = this.array.findIndex((item) => item.id === key);

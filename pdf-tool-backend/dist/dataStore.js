@@ -23,7 +23,7 @@ var DataStore = /** @class */ (function () {
     };
     DataStore.prototype.create = function (key, value) {
         if (this.map.has(key)) {
-            throw new Error("DataStore : key exists");
+            throw new Error("DataStore : From ".concat(this.filePath, " key exists"));
         }
         this.map.set(key, value),
             this.array.push(value);
@@ -39,7 +39,7 @@ var DataStore = /** @class */ (function () {
     };
     DataStore.prototype.getById = function (key) {
         if (!this.map.has(key)) {
-            throw new Error("DataStore : Item doesn't exist");
+            throw new Error("DataStore : From ".concat(this.filePath, " item doesn't exists"));
         }
         return this.map.get(key);
     };
@@ -58,7 +58,7 @@ var DataStore = /** @class */ (function () {
     };
     DataStore.prototype.update = function (key, value) {
         if (!this.map.has(key)) {
-            throw new Error("DataStore : Item doesn't exist");
+            throw new Error("DataStore : From ".concat(this.filePath, " item doesn't exists"));
         }
         this.map.set(key, value);
         var index = this.array.findIndex(function (item) { return item.id === key; });
@@ -66,7 +66,7 @@ var DataStore = /** @class */ (function () {
     };
     DataStore.prototype.delete = function (key) {
         if (!this.map.has(key)) {
-            throw new Error("DataStore : Item doesn't exist");
+            throw new Error("DataStore : From ".concat(this.filePath, " item doesn't exists"));
         }
         this.map.delete(key);
         var index = this.array.findIndex(function (item) { return item.id === key; });

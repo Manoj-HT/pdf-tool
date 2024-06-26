@@ -1,3 +1,11 @@
+# 0.0.3
+
+1. added verbose error messages in backend data store
+2. set up static file serving in backend
+3. added upload and download pdf apis
+4. downgraded front end from angular 18 => angular 17.3
+5. updated pdf viewer to load pdfs by id from backend
+
 # 0.0.2
 
 1. pdf viewer component added

@@ -15,15 +15,29 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import { DataStore } from "./dataStore.js";
+import path, { dirname } from "path";
+import multer from "multer";
+import { fileURLToPath } from "url";
 // environment configs
 dotenv.config();
 // database
 var pdfs = new DataStore("database/pdfs.json");
 var users = new DataStore("database/users.json");
-// global declarations
+var storage = multer.diskStorage({
+    destination: "uploads/documents/",
+    filename: function (req, file, cb) {
+        var uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        var ext = path.extname(file.originalname);
+        cb(null, uniqueSuffix + ext);
+    },
+});
+// global declarations and middleware
 var jwtSecretKey = process.env.JWT_SECRET_KEY;
 var app = express();
 var port = process.env.PORT;
+var upload = multer({ storage: storage });
+var __filename = fileURLToPath(import.meta.url);
+var __dirname = dirname(__filename);
 var authMiddleware = function (req, res, next) {
     var authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) {
@@ -48,6 +62,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));
+app.use(express.static(path.join(__dirname, "..", "uploads", "documents")));
 // api endpoints
 var apis = {
     default: "/",
@@ -60,6 +75,8 @@ var apis = {
     createPdf: "/create-pdf",
     updatePdf: "/update-pdf",
     pdfListByUserId: "/pdf-list-by-userId",
+    uploadPdf: "/upload-pdf",
+    downloadPdf: "/download-pdf"
 };
 // apis
 app.get(apis.default, function (req, res) {
@@ -131,24 +148,35 @@ app.delete(apis.user, authMiddleware, function (req, res) {
 app.get(apis.pdfListByUserId, authMiddleware, function (req, res) {
     var userId = req.query.id;
     var user = users.getById(userId);
-    var pdfList;
+    var pdfList = [];
     try {
         pdfList = pdfs.getByIdList.apply(pdfs, user.pdfList);
     }
     catch (err) {
         console.log(err);
-        pdfList = [];
     }
     finally {
+        if ((pdfList === null || pdfList === void 0 ? void 0 : pdfList.length) != 0) {
+            for (var _i = 0, pdfList_1 = pdfList; _i < pdfList_1.length; _i++) {
+                var pdf = pdfList_1[_i];
+                delete pdf.data;
+            }
+        }
         res.send(pdfList);
     }
 });
 app.post(apis.createPdf, authMiddleware, function (req, res) {
     var pdf = req.body;
     var createdDate = new Date();
-    var id = btoa(pdf.name) + btoa(String(createdDate));
-    pdf = __assign(__assign({}, pdf), { id: id, createdDate: createdDate });
+    var id = btoa(pdf.name) + btoa(createdDate.toDateString());
+    pdf = __assign(__assign({}, pdf), { id: id, createdDate: createdDate, data: {} });
     pdfs.create(pdf.id, pdf);
+    var user = users.getById(pdf.userId);
+    var pdfList = user.pdfList;
+    pdfList.push(id);
+    user = __assign(__assign({}, user), { pdfList: pdfList });
+    pdfs.save();
+    users.save();
     res.send({ message: "created succesfully", pdf: pdf });
 });
 app.get(apis.pdf, authMiddleware, function (req, res) {
@@ -168,6 +196,19 @@ app.delete(apis.pdf, authMiddleware, function (req, res) {
     pdfs.delete(id);
     res.send({ message: "Deleted" });
     pdfs.save();
+});
+app.post(apis.uploadPdf, upload.single("file"), authMiddleware, function (req, res) {
+    var file = req.file;
+    var fileName = file === null || file === void 0 ? void 0 : file.filename;
+    res.send({
+        message: "file uploaded at location ".concat(fileName),
+        fileName: fileName,
+    });
+});
+app.get(apis.downloadPdf, function (req, res) {
+    var fileName = req.query.fileName;
+    var filePath = path.join(__dirname, "..", "uploads", "documents", fileName);
+    res.download(filePath, fileName);
 });
 // server
 app.listen(port, function () {

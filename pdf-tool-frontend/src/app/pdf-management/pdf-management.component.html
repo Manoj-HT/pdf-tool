@@ -11,7 +11,7 @@
         </thead>
         <tbody>
           @for(pdf of pdfList; track pdf){
-            <tr>
+            <tr (click)="gotoPdf(pdf.id)" >
               <td>{{ pdf.name }}</td>
               <td>{{ pdf.description }}</td>
               <td>{{ pdf.createdDate | date }}</td>
@@ -46,7 +46,7 @@
         <div class="row_element">
           <file-upload
             [acceptTypeText]="'.pdf, .docx, .doc'"
-            [controlName]="'fileId'"
+            [controlName]="'fileName'"
             [label]="'pdfUpload'"
             [parentForm]="form"
             [executeFnForValueSet]="true"

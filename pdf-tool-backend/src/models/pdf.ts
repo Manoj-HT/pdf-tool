@@ -5,4 +5,5 @@ export type PDF = {
   name : string;
   createdDate: Date;
   description : string;
+  fileName : string
 };
