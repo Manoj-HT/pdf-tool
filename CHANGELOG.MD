@@ -1,3 +1,8 @@
+# 1.0.0
+
+1. RC-1 Complete
+2. Readme added for installation and usable instructions
+
 # 0.0.5
 
 1. added login background
