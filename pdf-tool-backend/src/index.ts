@@ -79,12 +79,8 @@ const apis = {
 
 // apis
 app.get(apis.default, (req, res) => {
-  let size = {
-    pdf: pdfs.getSize(),
-    user: users.getSize(),
-  };
   res.send(
-    `Hello, number of users = ${size.user}, number of pdfs = ${size.pdf}`
+    `Hello, You are currently visiting backend server, please go to http://localhost:4200 for UI`
   );
 });
 
@@ -163,7 +159,9 @@ app.get(apis.pdfListByUserId, authMiddleware, (req, res) => {
   let user = users.getById(userId) as User;
   let pdfList: PDF[] = [];
   try {
-    pdfList = pdfs.getByIdList(...user.pdfList) as PDF[];
+    pdfList = JSON.parse(
+      JSON.stringify(pdfs.getByIdList(...user.pdfList))
+    ) as PDF[];
   } catch (err) {
     console.log(err);
   } finally {
@@ -236,5 +234,7 @@ app.get(apis.downloadPdf, (req, res) => {
 
 // server
 app.listen(port, () => {
-  console.log(`Server Running, goto http://localhost:${port}`);
+  console.log(
+    `Backend server running at http://localhost:${port}, goto http://localhost:4200 for UI`
+  );
 });

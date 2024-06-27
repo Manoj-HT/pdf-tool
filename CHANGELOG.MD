@@ -1,3 +1,9 @@
+# 1.0.1
+
+1. fixed bug whre annotations were disappearing after routing back to home page
+2. added verbose server messages for visiting front end and backend
+3. deleted outdated pdfs, pdf data, user data for a clean new setup
+
 # 1.0.0
 
 1. RC-1 Complete

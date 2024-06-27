@@ -80,11 +80,7 @@ var apis = {
 };
 // apis
 app.get(apis.default, function (req, res) {
-    var size = {
-        pdf: pdfs.getSize(),
-        user: users.getSize(),
-    };
-    res.send("Hello, number of users = ".concat(size.user, ", number of pdfs = ").concat(size.pdf));
+    res.send("Hello, You are currently visiting backend server, please go to http://localhost:4200 for UI");
 });
 app.post(apis.login, function (req, res) {
     var _a = req.body, email = _a.email, password = _a.password;
@@ -150,7 +146,7 @@ app.get(apis.pdfListByUserId, authMiddleware, function (req, res) {
     var user = users.getById(userId);
     var pdfList = [];
     try {
-        pdfList = pdfs.getByIdList.apply(pdfs, user.pdfList);
+        pdfList = JSON.parse(JSON.stringify(pdfs.getByIdList.apply(pdfs, user.pdfList)));
     }
     catch (err) {
         console.log(err);
@@ -213,6 +209,6 @@ app.get(apis.downloadPdf, function (req, res) {
 });
 // server
 app.listen(port, function () {
-    console.log("Server Running, goto http://localhost:".concat(port));
+    console.log("Backend server running at http://localhost:".concat(port, ", goto http://localhost:4200 for UI"));
 });
 //# sourceMappingURL=index.js.map
