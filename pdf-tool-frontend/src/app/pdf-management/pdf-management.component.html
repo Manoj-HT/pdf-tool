@@ -11,11 +11,11 @@
         </thead>
         <tbody>
           @for(pdf of pdfList; track pdf){
-            <tr (click)="gotoPdf(pdf.id)" >
-              <td>{{ pdf.name }}</td>
-              <td>{{ pdf.description }}</td>
-              <td>{{ pdf.createdDate | date }}</td>
-            </tr>
+          <tr (click)="gotoPdf(pdf.id)">
+            <td>{{ pdf.name }}</td>
+            <td>{{ pdf.description }}</td>
+            <td>{{ pdf.createdDate | date }}</td>
+          </tr>
           }
         </tbody>
       </table>
@@ -57,12 +57,18 @@
     </form>
     <div class="button_group">
       <button
-      [disabled]="form.status == 'INVALID'"
-      [className]="form.status == 'VALID' && 'button_active'"
-      (click)="form.status == 'VALID' && upload()"
-    >
-      Upload
-    </button>
+        [disabled]="form.status == 'INVALID'"
+        [className]="form.status == 'VALID' && 'button_active'"
+        (click)="form.status == 'VALID' && upload()"
+      >
+        Upload
+      </button>
     </div>
   </div>
 </div>
+@if(dialog()){
+<div class="card alert">
+  <p>{{ text }}</p>
+  <button (click)="dialog.set(false)">OK</button>
+</div>
+}

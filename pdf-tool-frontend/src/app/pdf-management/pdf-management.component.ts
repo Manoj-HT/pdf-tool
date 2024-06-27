@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormElements } from '../shared/components/form-elements/form_elements';
 import { ApiService } from '../shared/services/api/api.service';
 import { LocalStorageService } from '../shared/services/local-storage/local-storage.service';
 import { PDF } from '../shared/models/pdf';
 import { DatePipe } from '@angular/common';
-import { map } from 'rxjs';
+import { catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
 const PdfManagementImports = [FormElements, DatePipe];
 @Component({
@@ -19,7 +19,7 @@ export class PdfManagementComponent {
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
   private storage = inject(LocalStorageService);
-  private router = inject(Router)
+  private router = inject(Router);
   form = this.fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
@@ -41,12 +41,23 @@ export class PdfManagementComponent {
     });
   }
 
+  dialog = signal(false);
+  text!: string;
   uploadFile = (e: File) => {
     let formData = new FormData();
     formData.append('file', e);
-    return this.apiService
-      .uploadFile(formData)
-      .pipe(map((res) => res['fileName'] as string));
+    return this.apiService.uploadFile(formData).pipe(
+      map((res) => {
+        this.text = "Uploaded Succesfully"
+        this.dialog.set(true)
+        return res['fileName'] as string;
+      }),
+      catchError((err) => {
+        this.text = 'Error uploaing';
+        this.dialog.set(true)
+        return err as string;
+      })
+    );
   };
 
   upload() {
@@ -58,7 +69,7 @@ export class PdfManagementComponent {
     });
   }
 
-  gotoPdf(id: string){
-    this.router.navigate(['view',id])
+  gotoPdf(id: string) {
+    this.router.navigate(['view', id]);
   }
 }

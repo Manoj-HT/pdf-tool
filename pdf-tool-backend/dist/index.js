@@ -108,7 +108,7 @@ app.post(apis.login, function (req, res) {
 });
 app.post(apis.createUser, function (req, res) {
     var user = req.body;
-    user = __assign(__assign({}, user), { id: btoa(user.email), pdfList: [""] });
+    user = __assign(__assign({}, user), { id: btoa(user.email), pdfList: [] });
     users.create(user.id, user);
     res.send({ message: "user created", user: user });
     users.save();

@@ -113,7 +113,7 @@ app.post(apis.createUser, (req, res) => {
   user = {
     ...user,
     id: btoa(user.email),
-    pdfList: [""],
+    pdfList: [],
   };
   users.create(user.id, user);
   res.send({ message: "user created", user } as ApiResponse);

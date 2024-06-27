@@ -1,3 +1,7 @@
+# 1.0.2
+
+1. minor bug fixes
+
 # 1.0.1
 
 1. fixed bug whre annotations were disappearing after routing back to home page
