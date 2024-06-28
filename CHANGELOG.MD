@@ -1,3 +1,7 @@
+# 1.0.3
+
+1. user joined message in login page
+
 # 1.0.2
 
 1. minor bug fixes

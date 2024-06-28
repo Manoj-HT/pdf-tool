@@ -26,6 +26,8 @@ export class LoginPageComponent {
   text! : string
   joined(e : {state : boolean}){
     if(e.state){
+      this.text = "User created succesfully"
+      this.dialog.set(true)
       this.case = "login"
     }else{
       this.text = "Error creating user"
